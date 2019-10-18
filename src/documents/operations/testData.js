@@ -48,11 +48,11 @@ export const document = {
     'point2': { id: "point2", text: "Quick Anectdote", sentences: ['sent2']}
   },
   paragraphs: {
-    'para1': {id: 'para1', title: 'Introduce ANT', points: ['point1', 'point2'] }
+    'para1': {id: 'para1', title: 'Introduce ANT', points: ['point1', 'point2'], snippets: ['snip1', 'snip2'] }
   },
   sections: {
     order: ['sect1'],
-    'sect1': { id: "sect1", paragraphs: ['para1']}
+    'sect1': { id: "sect1", title: 'Introductory Section', paragraphs: ['para1']}
   }
 }
 
