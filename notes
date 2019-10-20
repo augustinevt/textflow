@@ -3,3 +3,26 @@ https://medium.com/@eferhatg/create-react-app-continuous-integration-config-with
 
 add project in cypress; add key to circle CI
 
+<List
+  parentID={paraID}
+  data={ points }
+  collection='points'
+  addItem={(val, parentID) => addItem({
+    loc: {
+        collection: 'sentences',
+        belongs_to: {
+          collection: 'points',
+          id: parentID
+        }
+      },
+      item: {text: val}
+    })
+  }
+  removeItem={id => removeItem(
+    { loc: { collection: 'points', id}}
+  )}
+  updateItem={(val, id) => updateItem({
+    loc: { collection: 'points', id},
+    item: { id, text: val}
+  })}
+/>

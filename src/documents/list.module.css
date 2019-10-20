@@ -1,0 +1,40 @@
+.list {
+  /* border: 1px solid red; */
+  /* margin-left: 10px; */
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-left: 4%;
+  padding-bottom: 4%;
+}
+
+.list div {
+  /* display: flex; */
+  /* padding: 5px; */
+  /* width: 100%; */
+  /* border: solid; */
+}
+
+.newForm {
+  /* border: solid; */
+  width: 100%;
+}
+
+.item {
+  /* border: solid; */
+}
+
+.header {
+  display: flex;
+  /* border: solid; */
+}
+
+.title {
+  display: flex;
+  /* border: solid; */
+}
+
+.removeBtn {
+  /* border: solid; */
+}

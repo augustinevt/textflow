@@ -48,6 +48,91 @@ test('updates an document title', () => {
 
 });
 
+/// POINTS
+
+test('updates a Point', () => {
+  const action = {
+    type: 'DOCUMENT_ITEM_UPDATE',
+    payload: {
+      loc: {
+        collection: 'points',
+        id: 'point1'
+      },
+      item: {text: "Crazy how foxes can jump"}
+    }
+  }
+
+  const initialState = JSON.parse(JSON.stringify(document))
+  const desiredState = {...initialState, points: {
+    ...document.points,
+    'point1': { id: 'point1', text: 'Crazy how foxes can jump', sentences: ['sent1']}
+  }}
+
+  const newState = reducer(initialState, action)
+
+  expect(newState).toEqual(desiredState)
+});
+
+test('remove a Point', () => {
+
+
+    const action = {
+      type: 'DOCUMENT_ITEM_REMOVE',
+      payload: {
+        loc: {
+          collection: 'points',
+          id: 'point1'
+        }
+      }
+    }
+
+    const initialState = JSON.parse(JSON.stringify(document))
+    const desiredState = JSON.parse(JSON.stringify(document))
+    desiredState.paragraphs['para1'].points = ['point2']
+
+    delete desiredState.points['point1']
+
+    const newState = reducer(initialState, action)
+
+    expect(newState).toEqual(desiredState)
+});
+
+test.only('add a Point', () => {
+
+    const id = uuid()
+    const action = {
+      type: 'DOCUMENT_ITEM_ADD',
+      payload: {
+        loc: {
+          collection: 'points',
+          belongs_to: {
+            collection: 'paragraphs',
+            id: 'para1'
+          },
+          id
+        },
+        item: {
+          id,
+          text: 'meow'
+        }
+      }
+    }
+
+    const initialState = JSON.parse(JSON.stringify(document))
+    const desiredState = JSON.parse(JSON.stringify(document))
+    desiredState.paragraphs['para1'].points.push(id)
+    desiredState.points[id] = { id, text: 'meow' }
+
+    const newState = reducer(initialState, action)
+
+    expect(newState).toEqual(desiredState)
+});
+
+
+
+
+////
+
 test('updates a sentence', () => {
   const action = {
     type: 'DOCUMENT_ITEM_UPDATE',
@@ -115,6 +200,63 @@ test('add a snippet', () => {
   expect(newState.snippets[id].text).toEqual(desiredState)
 });
 
+/// PARAGRAPHS
+
+test('adds a paragraph', () => {
+  const action = {
+    type: 'DOCUMENT_ITEM_ADD',
+    payload: {
+      loc: {
+        collection: 'paragraphs',
+        belongs_to: {collection: 'sections', id: 'sect1'},
+        id: 'para2'
+      },
+      item: {id: 'para2', title: 'Paragraph Two'}
+    }
+  }
+
+  const initialState = JSON.parse(JSON.stringify(document))
+  const desiredState = JSON.parse(JSON.stringify(document))
+  desiredState.sections['sect1'].paragraphs.push('para2')
+  desiredState.paragraphs.para2 = {
+    id: 'para2',
+    title: 'Paragraph Two',
+    points: []
+  }
+
+  const newState = reducer(initialState, action)
+
+  // console.log(newState)
+
+  expect(newState).toEqual(desiredState)
+});
+
+test('Remove a paragraph', () => {
+  const action = {
+    type: 'DOCUMENT_ITEM_REMOVE',
+    payload: {
+      loc: {
+        collection: 'paragraphs',
+        id: 'para1'
+      }
+    }
+  }
+
+  const initialState = JSON.parse(JSON.stringify(document))
+  const desiredState = JSON.parse(JSON.stringify(document))
+  desiredState.sections['sect1'].paragraphs = []
+  desiredState.paragraphs = {}
+
+  const newState = reducer(initialState, action)
+
+  // console.log(newState)
+
+  expect(newState).toEqual(desiredState)
+});
+
+
+
+
 /// SECTIONS
 test('add a section', () => {
   const action = {
@@ -167,7 +309,7 @@ test('remove a section', () => {
   expect(newState).toEqual(desiredState)
 });
 
-test.only('updates a section', () => {
+test('updates a section', () => {
   const action = {
     type: 'DOCUMENT_ITEM_UPDATE',
     payload: {

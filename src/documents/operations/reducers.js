@@ -2,6 +2,13 @@ import deepClone from 'clone-deep'
 
 import {document} from './testData'
 
+const initModels = {
+  'paragraphs': {title: 'default', points: [], snippets: []},
+  'points': {text: 'default', sentences: []},
+  'sentences': {text: 'default'},
+  'snippets': {text: 'default'}
+}
+
 const main = (state = document, action) => {
   const newState = deepClone(state)
   const { payload } = action
@@ -32,10 +39,15 @@ const main = (state = document, action) => {
       if (payload.loc.collection === 'sections') {
         newState.sections[payload.loc.id] = {...payload.item, paragraphs: []}
         newState.sections.order.push(payload.loc.id)
+
         return newState
       }
 
-      newState[payload.loc.collection][payload.loc.id] = {...payload.item}
+      if (payload.loc.belongs_to) {
+        newState[payload.loc.belongs_to.collection][payload.loc.belongs_to.id][payload.loc.collection].push(payload.loc.id)
+      }
+
+      newState[payload.loc.collection][payload.loc.id] = {...initModels[payload.loc.collection], ...payload.item}
 
       return newState
 
@@ -57,9 +69,17 @@ const main = (state = document, action) => {
 
       delete newState[payload.loc.collection][payload.loc.id]
 
-      Object.keys(state.points).forEach(pointID => {
-        newState.points[pointID].sentences = newState.points[pointID]
-          .sentences.filter(sentenceID => sentenceID !== payload.loc.id)
+      // this needs to be simplified
+      // It's okay to be expensive here... the use case does not anticipate
+      // intense use of remove and it's better to be thorgouh
+      Object.keys(newState).forEach(collection => {
+        Object.keys(newState[collection]).forEach(itemID =>{
+          if (state[collection][itemID][payload.loc.collection]) {
+            newState[collection][itemID][payload.loc.collection] = newState
+              [collection][itemID][payload.loc.collection]
+              .filter(childID => childID !== payload.loc.id)
+          }
+        })
       })
 
       return newState

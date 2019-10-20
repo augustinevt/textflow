@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 
 import styles from './document.module.css'
 
-import { TextInput} from 'text-exploder-two'
+// import { TextInput} from 'text-exploder-two'
+import list from './List'
+import item from './Item'
 
 const mapStateToProps = (state) => {
   return {
@@ -19,200 +21,158 @@ const flowSettings = {
   4: {showSyntax: true}
 }
 
+const Sections = list('sections')
+const Section = item('sections')
+const Paragraphs = list('paragraphs')
+const Paragraph = item('paragraphs')
+const Points = list('points')
+const Point = item('points')
+const Sentences = list('sentences')
+const Sentence = item('sentences')
+const Snippets = list('snippets')
+const Snippet = item('snippets')
+
 function Articles (props) {
-  // flowState
-  const [flowState, setFlowState] = useState(0)
+
+  const [flowState, setFlowState] = useState(3)
   const [selectedParagraph, setSelectedParagraph] = useState(null)
   const [selectedSection, setSelectedSection] = useState(null)
 
+  const removeItem = ({type, id}) => {
+    //
+    // (loc.id === selectedParagraph) &&
+    //   setSelectedParagraph(false)
+    //
+    // (loc.id === selectedSection) &&
+    //   setSelectedParagraph(false)
 
-  const removeItem = ({loc}) => {
+    const loc = {
+      collection: type,
+      id
+    }
+
     props.dispatch({ type: "DOCUMENTS_ITEM_REMOVE", payload: { loc }})
   }
 
-  const updateItem = ({loc, item}) => {
+  const updateItem = ({type, item, id}) => {
+    const loc = {
+      collection: type,
+      id,
+    }
+
     props.dispatch({type: "DOCUMENTS_ITEM_UPDATE", payload: {loc, item}})
   }
 
-  const addItem = ({loc, item}) => {
+  const addItem = ({type, item, parentID=null, parentType=null}) => {
+
+    console.log('ADD ITEM YEAH!')
+    const loc = {
+      collection: type,
+    }
+
+    if (parentID) {
+      loc.belongs_to = {
+        collection: parentType,
+        id: parentID
+      }
+    }
+
     props.dispatch({type: "DOCUMENTS_ITEM_ADD", payload: {loc, item}})
+  }
+
+  const isolateItem = ({type, id, parentID}) => {
+    if (type === 'paragraphs') {
+      setSelectedSection(parentID)
+      setSelectedParagraph(id)
+    } else if (type === 'sections') {
+      setSelectedSection(id)
+    }
   }
 
   const {document: {sections, paragraphs, points, sentences, snippets}} = props
 
   const getJSX = (settings) => {
-    const displaySections = selectedSection ?
-      [selectedSection] :
-      sections.order
+    return (<div className={styles.wrapper} >
+      <Sections
+        addItem={addItem}
+        hideNew={(selectedParagraph || selectedSection)}>
+          {(selectedSection ? [selectedSection] : sections.order).map(sectID => <Section
+            listOnly={!!selectedParagraph}
+            id={sectID}
+            updateItem={updateItem}
+            removeItem={removeItem}
+            isolateItem={isolateItem}
+            data={sections[sectID]}>
 
-    return (
-      <div className={styles.wrapper}>
+              <Paragraphs addItem={addItem}>
+                {(selectedParagraph ?
+                  [selectedParagraph] :
+                  sections[sectID].paragraphs).map(paraID => <Paragraph
+                    id={paraID}
+                    updateItem={updateItem}
+                    removeItem={removeItem}
+                    isolateItem={isolateItem}
+                    data={paragraphs[paraID]}>
 
-        { selectedSection && <div onClick={() => setSelectedSection(false)}>
-            {sections[selectedSection].title} >>
-          </div>
-        }
+                    {settings.showPoints && <Points addItem={addItem}>
+                      {paragraphs[paraID].points.map(poiID => <Point
+                        id={poiID}
+                        updateItem={updateItem}
+                        removeItem={removeItem}
+                        data={points[poiID]}>
 
-        { selectedParagraph && <div onClick={() => setSelectedParagraph(false)}>
-            {paragraphs[selectedParagraph].title}
-          </div>
-        }
+                        {settings.showSentences && <Sentences addItem={addItem}>
+                          {points[poiID].sentences.map(sentID => <Sentence
+                            id={sentID}
+                            updateItem={updateItem}
+                            removeItem={removeItem}
+                            data={sentences[sentID]}/>
+                          )}
+                        </Sentences>}
 
-        {
-          displaySections.map((sectID) => <div className={styles.section}>
+                      </Point>)}
+                    </Points>}
 
-            { !selectedParagraph && <div
-                className={styles.title}
-                onClick={() => setSelectedSection(sectID)}>
-                  <TextInput
-                    addItemHandler={
-                      (val) => updateItem({
-                        loc: { collection: 'sections', id: sectID},
-                        item: { title: val}
-                      })
-                    }
-                    text={sections[sectID].title}
-                  />
-                </div>
-            }
+                      {settings.showSnippets && <Snippets addItem={addItem}>
+                        {paragraphs[paraID].snippets.map(snipID => <Snippet
+                          id={snipID}
+                          updateItem={updateItem}
+                          removeItem={removeItem}
+                          data={snippets[snipID]}>
+                        </Snippet>)}
+                      </Snippets>}
 
-            <div
-              onClick={() => removeItem({
-                loc: { collection: 'sections', id: sectID}
-              })}
-              className="removeBtn">
-              x
-            </div>
+              </Paragraph>)}
+            </Paragraphs>
+          </Section>)}
+      </Sections>
 
-            { (selectedParagraph ?
-                [selectedParagraph] :
-                sections[sectID].paragraphs).map((paraID) => (
-                  <div className={styles.paragraph}>
-
-                    <div
-                      className={styles.title}
-                      onClick={() => {
-                        setSelectedSection(sectID)
-                        setSelectedParagraph(paraID)
-                      }}>
-
-                      { paragraphs[paraID].title }
-
-                    </div>
-
-                    { settings.showPoints && paragraphs[paraID].points.map((poiID) => (
-                      <div className={styles.point}>
-                        { points[poiID].text }
-                        { settings.showSentences && points[poiID].sentences.map((sentID) => (
-
-                          <div className={styles.sentence}>
-                            {sentences[sentID].text}
-                          </div>
-
-                        ))}
-                  </div>
-                ))
-              }
-
-                { settings.showSnippets && paragraphs[paraID].snippets.map((snipID) => (
-                  <div className={styles.snippet}>
-                    {snippets[snipID].text}
-                  </div>
-                ))}
-
-              </div>)
-            )}
-            {settings.showSyntax && 'syntax'}
-          </div>)
-        }
-        { !selectedSection &&
-          <h1>
-            <TextInput
-              init={true}
-              text='add section'
-              addItemHandler={
-                (val) => {
-                  console.log(val)
-                  addItem({
-                    loc: {collection: 'sections'},
-                    item: {title: val}
-                  })
-                }
-              }
-            />
-          </h1>
-        }
-      </div>
-    )
+    </div>)
   }
 
   return (
     <div>
-
-    {
-      /*
-      -----
-
-      ( if section or paragraph is selected... contrain range)
-
-      * skel
-
-        for each section
-          { section header }
-
-          list paragraphs
-            show points (black)
-
-      * research / flesh
-
-        for each section
-
-          list paragraphs
-            show points (grey)
-            show snippets (black)
-
-      * sketch
-
-        for each section
-
-          list paragraphs
-            show points (gray)
-            show snippets (gray)
-            show sentence points (black)
-
-      * skin
-
-        for each sections
-
-          list paragraphs
-            show sentences in syntax form
-
-
-
-
-      -----
-        // if flow is skell -> list the sections and the paragaphs / points
-          // add paragraph
-          // add point
-
-        // if flow is flesh -> show snippets
-
-        // if flow is flesh 2 -> show sentence under points
-
-        // if syntax -> show syntax
-      */
-
-    }
-      {flowState}
       <button onClick={() => setFlowState(0)}>Skel</button>
       <button onClick={() => setFlowState(1)}>points 1</button>
       <button onClick={() => setFlowState(2)}>snippets 2</button>
       <button onClick={() => setFlowState(3)}>sentences</button>
       <button onClick={() => setFlowState(4)}>syntax</button>
 
-      {
-        getJSX(flowSettings[flowState])
+      { selectedSection && <div onClick={() => setSelectedSection(false)}>
+          {sections[selectedSection] && sections[selectedSection].title} >>
+        </div>
       }
+
+      { selectedParagraph && <div onClick={() =>
+          setSelectedParagraph(false)}>
+            {
+              paragraphs[selectedParagraph] &&
+                paragraphs[selectedParagraph].title
+            }
+        </div>
+      }
+
+      { getJSX(flowSettings[flowState]) }
 
     </div>
   );
