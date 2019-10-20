@@ -1,5 +1,8 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
-import api from './../../api.mock.js';
+import { call, put, takeLatest } from 'redux-saga/effects'
+
+import uuid from 'uuid'
+
+import api from './../../api.mock.js'
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 export function* fetchDocuments(action) {
@@ -20,9 +23,48 @@ export function* fetchDocument(action) {
   }
 }
 
+export function* documentItemAdd(action) {
+  try {
+    // const documents = yield call(api.dummyDocumentList);
+    const id = uuid()
+    const payload = {...action.payload}
+    payload.loc.id = id
+    payload.item.id = id
+
+    yield put({type: "DOCUMENT_ITEM_ADD", payload});
+  } catch (e) {
+    console.log('document item add failed...', e)
+  }
+}
+
+export function* documentItemRemove(action) {
+  try {
+    // const documents = yield call(api.dummyDocumentList);
+    const payload = {...action.payload}
+
+    yield put({type: "DOCUMENT_ITEM_REMOVE", payload});
+  } catch (e) {
+    console.log('document item add failed...', e)
+  }
+}
+
+export function* documentItemUpdate(action) {
+  try {
+    // const documents = yield call(api.dummyDocumentList);
+    const payload = {...action.payload}
+
+    yield put({type: "DOCUMENT_ITEM_UPDATE", payload});
+  } catch (e) {
+    console.log('document item add failed...', e)
+  }
+}
+
 function* mySaga() {
-  yield takeEvery("DOCUMENTS_FETCH_REQUESTED", fetchDocuments);
-  yield takeEvery("DOCUMENTS_FETCH_REQUESTED", fetchDocument);
+  yield takeLatest("DOCUMENTS_FETCH_REQUESTED", fetchDocuments);
+  yield takeLatest("DOCUMENTS_FETCH_REQUESTED", fetchDocument);
+  yield takeLatest("DOCUMENTS_ITEM_ADD", documentItemAdd);
+  yield takeLatest("DOCUMENTS_ITEM_REMOVE", documentItemRemove);
+  yield takeLatest("DOCUMENTS_ITEM_UPDATE", documentItemUpdate);
 }
 
 export default mySaga;

@@ -2,22 +2,16 @@ import deepClone from 'clone-deep'
 
 import {document} from './testData'
 
-const main = (state = { documents: {}, document}, action) => {
+const main = (state = document, action) => {
   const newState = deepClone(state)
   const { payload } = action
 
-
   switch (action.type) {
-    case "DOCUMENTS_FETCH_SUCCEEDED":
-      const { documents } = action.payload;
-      return { ...state, documents };
-
     case "DOCUMENT_FETCH_SUCCEEDED":
       const { document } = action.payload;
-      return { ...state, document };
+      return document;
 
     case "DOCUMENT_ITEM_UPDATE":
-
 
       if (payload.loc.collection === 'document') {
         return { ...state, ...payload.item }
@@ -35,12 +29,31 @@ const main = (state = { documents: {}, document}, action) => {
 
     case "DOCUMENT_ITEM_ADD":
 
+      if (payload.loc.collection === 'sections') {
+        newState.sections[payload.loc.id] = {...payload.item, paragraphs: []}
+        newState.sections.order.push(payload.loc.id)
+        return newState
+      }
+
       newState[payload.loc.collection][payload.loc.id] = {...payload.item}
 
       return newState
 
 
     case "DOCUMENT_ITEM_REMOVE":
+
+      if (payload.loc.collection === 'sections') {
+        const id = payload.loc.id
+
+        delete newState.sections[id]
+
+        newState.sections.order = newState.sections.order.filter(
+          sectID => sectID !== id
+        )
+
+        return newState
+      }
+
 
       delete newState[payload.loc.collection][payload.loc.id]
 

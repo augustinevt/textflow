@@ -21,7 +21,8 @@ let document = {
     'para1': {id: 'para1', title: 'Introduce ANT', points: ['point1', 'point2'] }
   },
   sections: {
-    'sect1': { id: "sect1", paragraphs: ['para1']}
+    order: ['sect1'],
+    'sect1': { id: 'sect1', title: 'SECTION ONE', paragraphs: ['para1']}
   }
 }
 
@@ -113,6 +114,82 @@ test('add a snippet', () => {
 
   expect(newState.snippets[id].text).toEqual(desiredState)
 });
+
+/// SECTIONS
+test('add a section', () => {
+  const action = {
+    type: 'DOCUMENT_ITEM_ADD',
+    payload: {
+      loc: {
+        collection: 'sections',
+        id: 'sect2'
+      },
+      item: {id: 'sect2', title: 'SECTION TWO'}
+    }
+  }
+
+  const initialState = JSON.parse(JSON.stringify(document))
+  const desiredState = JSON.parse(JSON.stringify(document))
+
+  desiredState.sections = {
+    order: ['sect1', 'sect2'],
+    'sect1': { id: 'sect1', title: 'SECTION ONE', paragraphs: ['para1']},
+    'sect2': { id: 'sect2', title: 'SECTION TWO', paragraphs: []},
+
+  }
+
+  const newState = reducer(initialState, action)
+
+  expect(newState).toEqual(desiredState)
+});
+
+
+test('remove a section', () => {
+  const action = {
+    type: 'DOCUMENT_ITEM_REMOVE',
+    payload: {
+      loc: {
+        collection: 'sections',
+        id: 'sect1'
+      }
+    }
+  }
+
+  const initialState = JSON.parse(JSON.stringify(document))
+  const desiredState = JSON.parse(JSON.stringify(document))
+
+  desiredState.sections = {
+    order: []
+  }
+
+  const newState = reducer(initialState, action)
+
+  expect(newState).toEqual(desiredState)
+});
+
+test.only('updates a section', () => {
+  const action = {
+    type: 'DOCUMENT_ITEM_UPDATE',
+    payload: {
+      loc: {
+        collection: 'sections',
+        id: 'sect1'
+      },
+      item: {id: 'sect1', title: 'SECTION ONE!!!'}
+    }
+  }
+
+  const initialState = JSON.parse(JSON.stringify(document))
+  const desiredState = JSON.parse(JSON.stringify(document))
+  desiredState.sections.sect1.title = 'SECTION ONE!!!'
+
+  const newState = reducer(initialState, action)
+
+  expect(newState).toEqual(desiredState)
+});
+
+
+///  END SECTIONS
 
 test('adds sentence to a point by update', () => {
     const action = {

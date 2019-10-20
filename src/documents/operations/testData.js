@@ -51,8 +51,9 @@ export const document = {
     'para1': {id: 'para1', title: 'Introduce ANT', points: ['point1', 'point2'], snippets: ['snip1', 'snip2'] }
   },
   sections: {
-    order: ['sect1'],
-    'sect1': { id: "sect1", title: 'Introductory Section', paragraphs: ['para1']}
+    order: ['sect1', 'sect2'],
+    'sect1': { id: "sect1", title: 'Introductory Section', paragraphs: ['para1']},
+    'sect2': { id: "sect2", title: 'Second Section', paragraphs: ['para1']}
   }
 }
 
