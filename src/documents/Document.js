@@ -3,49 +3,60 @@ import { connect } from 'react-redux';
 
 import styles from './document.module.css'
 
-// import { TextInput} from 'text-exploder-two'
+import TextInput from './TextInput'
 import list from './List'
-import item from './Item'
+import Section from './Section'
 
 const mapStateToProps = (state) => {
+
+  const zippedDoc = {}
+  const procDoc = JSON.parse(JSON.stringify(state.document))
+
+  zippedDoc.sections = procDoc.sections.order.map(sectID => procDoc.sections[sectID])
+
+  zippedDoc.sections.forEach(section => {
+    section.paragraphs = section.paragraphs.map(parID => ({
+      ...procDoc.paragraphs[parID],
+      snippets: procDoc.paragraphs[parID].snippets.map( snipID => procDoc.snippets[snipID]),
+      sentences: procDoc.paragraphs[parID].sentences.map( sentID => procDoc.sentences[sentID]),
+      points: procDoc.paragraphs[parID].points.map( poiID => ({
+        ...procDoc.points[poiID],
+        sentences: procDoc.points[poiID].sentences.map(sentID => procDoc.sentences[sentID])
+      }))
+    }))
+  })
+
   return {
-    document: state.document
+    document: state.document,
+    zippedDoc: zippedDoc
   };
 };
 
 const flowSettings = {
-  0: {},
-  1: {showPoints: true},
-  2: {showPoints: true, showSnippets: true},
-  3: {showPoints: true, showSnippets: true, showSentences: true},
-  4: {showSyntax: true}
+  0: {showParagraphs: true},
+  1: {showParagraphs: true, showPoints: true},
+  2: {showParagraphs: true, showPoints: true, showSnippets: true},
+  3: {showParagraphs: true, showPoints: true, showSnippets: true, showSentences: true},
+  4: {syntaxMode: true}
 }
 
-const Sections = list('sections')
-const Section = item('sections')
-const Paragraphs = list('paragraphs')
-const Paragraph = item('paragraphs')
-const Points = list('points')
-const Point = item('points')
-const Sentences = list('sentences')
-const Sentence = item('sentences')
-const Snippets = list('snippets')
-const Snippet = item('snippets')
+// const Sections = list('sections')
+// const Section = item('sections')
+// const Paragraphs = list('paragraphs')
+// const Paragraph = item('paragraphs')
+// const Points = list('points')
+// const Point = item('points')
+// const Sentences = list('sentences')
+// const Sentence = item('sentences')
+// const Snippets = list('snippets')
+// const Snippet = item('snippets')
 
 function Articles (props) {
-
-  const [flowState, setFlowState] = useState(3)
-  const [selectedParagraph, setSelectedParagraph] = useState(null)
+  const [flowState, setFlowState] = useState(4)
   const [selectedSection, setSelectedSection] = useState(null)
+  const [selectedParagraph, setSelectedParagraph] = useState(null)
 
   const removeItem = ({type, id}) => {
-    //
-    // (loc.id === selectedParagraph) &&
-    //   setSelectedParagraph(false)
-    //
-    // (loc.id === selectedSection) &&
-    //   setSelectedParagraph(false)
-
     const loc = {
       collection: type,
       id
@@ -55,6 +66,7 @@ function Articles (props) {
   }
 
   const updateItem = ({type, item, id}) => {
+    console.log('document => ITEM update', type, item, id)
     const loc = {
       collection: type,
       id,
@@ -64,8 +76,6 @@ function Articles (props) {
   }
 
   const addItem = ({type, item, parentID=null, parentType=null}) => {
-
-    console.log('ADD ITEM YEAH!')
     const loc = {
       collection: type,
     }
@@ -80,74 +90,80 @@ function Articles (props) {
     props.dispatch({type: "DOCUMENTS_ITEM_ADD", payload: {loc, item}})
   }
 
-  const isolateItem = ({type, id, parentID}) => {
-    if (type === 'paragraphs') {
-      setSelectedSection(parentID)
-      setSelectedParagraph(id)
-    } else if (type === 'sections') {
-      setSelectedSection(id)
+  const {document: {sections, paragraphs}} = props
+
+  const isolateItem = (sectionID, paragraphID=null) => {
+    const section = props.zippedDoc.sections.find(section => {
+
+       return section.id === sectionID
+
+    })
+
+    setSelectedSection(section)
+
+    if (paragraphID) {
+      const paragraph = section.paragraphs.find(
+        paragraph => paragraph.id === paragraphID
+      )
+
+      setSelectedParagraph(paragraph)
     }
   }
 
-  const {document: {sections, paragraphs, points, sentences, snippets}} = props
-
   const getJSX = (settings) => {
     return (<div className={styles.wrapper} >
-      <Sections
-        addItem={addItem}
-        hideNew={(selectedParagraph || selectedSection)}>
-          {(selectedSection ? [selectedSection] : sections.order).map(sectID => <Section
-            listOnly={!!selectedParagraph}
-            id={sectID}
-            updateItem={updateItem}
-            removeItem={removeItem}
-            isolateItem={isolateItem}
-            data={sections[sectID]}>
 
-              <Paragraphs addItem={addItem}>
-                {(selectedParagraph ?
-                  [selectedParagraph] :
-                  sections[sectID].paragraphs).map(paraID => <Paragraph
-                    id={paraID}
-                    updateItem={updateItem}
-                    removeItem={removeItem}
-                    isolateItem={isolateItem}
-                    data={paragraphs[paraID]}>
+      {
 
-                    {settings.showPoints && <Points addItem={addItem}>
-                      {paragraphs[paraID].points.map(poiID => <Point
-                        id={poiID}
-                        updateItem={updateItem}
-                        removeItem={removeItem}
-                        data={points[poiID]}>
+          (selectedSection ? [selectedSection] : props.zippedDoc.sections).map(section =>
+            <Section
+              settings={settings}
+              data={section}
+              addItem={addItem}
+              updateItem={updateItem}
+              removeItem={removeItem}
+              isolateItem={isolateItem}
+              selectedParagraph={selectedParagraph}
+            />
+        )
+      }
 
-                        {settings.showSentences && <Sentences addItem={addItem}>
-                          {points[poiID].sentences.map(sentID => <Sentence
-                            id={sentID}
-                            updateItem={updateItem}
-                            removeItem={removeItem}
-                            data={sentences[sentID]}/>
-                          )}
-                        </Sentences>}
+      {
+        !selectedParagraph && <div className={styles.newForm}>
+          <TextInput
+            init={true}
+            text={'Add section'}
+            addItemHandler={(val) => addItem({
+              type: 'sections',
+              item: {title: val}
+            })}/>
+        </div>
+      }
 
-                      </Point>)}
-                    </Points>}
-
-                      {settings.showSnippets && <Snippets addItem={addItem}>
-                        {paragraphs[paraID].snippets.map(snipID => <Snippet
-                          id={snipID}
-                          updateItem={updateItem}
-                          removeItem={removeItem}
-                          data={snippets[snipID]}>
-                        </Snippet>)}
-                      </Snippets>}
-
-              </Paragraph>)}
-            </Paragraphs>
-          </Section>)}
-      </Sections>
 
     </div>)
+  }
+
+  const exportText = () => {
+    let text = ''
+
+    props.document.sections.order.forEach(sectionID => {
+      props.document.sections[sectionID].paragraphs.forEach(paraID => {
+        text += '\n\t'
+        props.document.paragraphs[paraID].points.forEach(poiID => {
+          props.document.points[poiID].sentences.forEach(sentID => {
+            text += props.document.sentences[sentID].text
+          })
+        })
+      })
+    })
+
+    const element = document.createElement('a')
+    const file = new Blob([text], {type: 'text/plain'})
+    element.href = URL.createObjectURL(file)
+    element.download = 'TEXT FILE.txt'
+    document.body.appendChild(element)
+    element.click()
   }
 
   return (
@@ -157,18 +173,22 @@ function Articles (props) {
       <button onClick={() => setFlowState(2)}>snippets 2</button>
       <button onClick={() => setFlowState(3)}>sentences</button>
       <button onClick={() => setFlowState(4)}>syntax</button>
+      <button onClick={() => exportText()}>EXPORT</button>
 
-      { selectedSection && <div onClick={() => setSelectedSection(false)}>
-          {sections[selectedSection] && sections[selectedSection].title} >>
+      { selectedSection &&
+        <div onClick={() => {
+          setSelectedSection(false)
+          setSelectedParagraph(false)
+        }}>
+          { selectedSection.title} >>
         </div>
       }
 
-      { selectedParagraph && <div onClick={() =>
-          setSelectedParagraph(false)}>
-            {
-              paragraphs[selectedParagraph] &&
-                paragraphs[selectedParagraph].title
-            }
+      { selectedParagraph &&
+        <div onClick={() => {
+          setSelectedParagraph(false)
+        }}>
+          { selectedParagraph.title} >>
         </div>
       }
 

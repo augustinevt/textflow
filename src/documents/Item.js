@@ -3,7 +3,6 @@ import {TextInput} from 'text-exploder-two'
 
 import styles from './list.module.css'
 
-
 export default (type) => ({children, ...props}) => {
   const listChildren = React.Children.toArray(children)
   const textAccessor = (type === 'sentences' || type === 'snippets'||  type === 'points') ? 'text' : 'title'
@@ -44,32 +43,3 @@ export default (type) => ({children, ...props}) => {
     </div>
   )
 }
-
-
-
-// <div className={styles.item}>
-//   <div className={styles.title}>
-//     <div onClick={() => removeItem(item.id)} className={styles.removeBtn}>X</div>
-//     <TextInput addItemHandler={(val) => updateItem(val, item.id)} text={item.text}/>
-//   </div>
-//   <div>
-//     { children && React.cloneElement(children, {...children.props, parentID: item.id}) }
-//   </div>
-// </div>))
-// }
-// <TextInput init={true} text='add item' addItemHandler={(val) => addItem(val, parentID)}/>
-//</div>
-
-
-// <div className={styles.setences}>
-//   { true &&
-//     <List
-//       addItem={() => {}}
-//       removeItem={() => {}}
-//       updateItem={() => {}}
-//       data={
-//         points[poiID].sentences
-//           .map(id => sentences[id])
-//       }/>
-//   }
-// </div>

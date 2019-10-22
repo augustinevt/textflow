@@ -5,8 +5,14 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  padding-left: 4%;
-  padding-bottom: 4%;
+  padding: 4%;
+  /* border: solid; */
+  /* padding-left: 4%; */
+  /* padding: 8%; */
+}
+
+.body {
+  /* border: solid; */
 }
 
 .list div {
@@ -18,15 +24,22 @@
 
 .newForm {
   /* border: solid; */
+  text-align: left;
   width: 100%;
 }
 
 .item {
+  /* padding: 2%; */
   /* border: solid; */
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .header {
   display: flex;
+  justify-content: flex-start;
+  /* flex-wrap: wrap; */
+
   /* border: solid; */
 }
 
@@ -37,4 +50,13 @@
 
 .removeBtn {
   /* border: solid; */
+}
+
+.removeBtn {
+  /* border: solid; */
+}
+
+
+.syntaxSentences{
+  border: solid;
 }

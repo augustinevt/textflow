@@ -6,7 +6,7 @@
 //     {id: 'sent2', text: 'The dog did\'t react.'}
 //   ],
 //   snippets: [
-//     {id: 'snip1', text: 'More research on foxes'},
+//     {id: 'snip1', text: 'More raesearch on foxes'},
 //     {id: 'snip2', text: 'What is the dogs name?'}
 //   ],
 //   points: [
@@ -36,8 +36,9 @@ export const document = {
   id: "doc1",
   title: "Actor Network Theory",
   sentences: {
-    'sent1': {id: 'sent1', text: 'The quick red fox jumped over the brown dog.'},
-    'sent2': {id: 'sent2', text: 'The dog did\'t react.'}
+    'sent1': {id: 'sent1', parentPoint: 'point1', text: 'The quick red fox jumped over the brown dog.'},
+    'sent2': {id: 'sent2', text: 'The dog did\'t react.'},
+    'sent3': {id: 'sent3', text: 'This sentences doesn\'t hava a point'}
   },
   snippets: {
     'snip1': {id: 'snip1', text: 'More research on foxes'},
@@ -48,7 +49,7 @@ export const document = {
     'point2': { id: "point2", text: "Quick Anectdote", sentences: ['sent2']}
   },
   paragraphs: {
-    'para1': {id: 'para1', title: 'Introduce ANT', points: ['point1', 'point2'], snippets: ['snip1', 'snip2'] }
+    'para1': {id: 'para1', title: 'Introduce ANT', points: ['point1', 'point2'], snippets: ['snip1', 'snip2'], sentences: ['sent1', 'sent2', 'sent3']}
   },
   sections: {
     order: ['sect1', 'sect2'],

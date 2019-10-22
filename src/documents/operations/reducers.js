@@ -3,7 +3,8 @@ import deepClone from 'clone-deep'
 import {document} from './testData'
 
 const initModels = {
-  'paragraphs': {title: 'default', points: [], snippets: []},
+  'sections': {title: 'default', paragraphs: []},
+  'paragraphs': {title: 'default', points: [], snippets: [], sentences: []},
   'points': {text: 'default', sentences: []},
   'sentences': {text: 'default'},
   'snippets': {text: 'default'}
@@ -38,7 +39,7 @@ const main = (state = document, action) => {
 
       if (payload.loc.collection === 'sections') {
         newState.sections[payload.loc.id] = {...payload.item, paragraphs: []}
-        newState.sections.order.push(payload.loc.id)
+        newState.sections.order.push(payload.item.id)
 
         return newState
       }
