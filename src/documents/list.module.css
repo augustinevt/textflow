@@ -57,6 +57,38 @@
 }
 
 
+/* SENTENCE STUFF */
+
+.pointBoundary {
+  color: lightGray;
+  width: 10px;
+  /* height: 10px; */
+  /* border: solid; */
+}
+
+.pointBoundary:hover {
+  color: black;
+}
+
 .syntaxSentences{
   border: solid;
+}
+
+.syntaxSentenceSpacer {
+  width: 3px;
+  height: 10px;
+  /* border: solid; */
+  display: inline-block;
+}
+
+.syntaxAdd {
+  display: none;
+}
+
+.syntaxSentenceSpacer:hover {
+  width: 30px;
+}
+
+.syntaxSentenceSpacer:hover .syntaxAdd {
+  display: inline-block;
 }

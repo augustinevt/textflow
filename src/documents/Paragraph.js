@@ -31,12 +31,17 @@ export default (props) => {
     const syntaxSentences = []
 
     props.data.points.forEach(point => {
-      syntaxSentences.push(<span>[</span>)
-      point.sentences.forEach((sentence, i) => syntaxSentences.push(
+      syntaxSentences.push(<span className={styles.pointBoundary}>[</span>)
+
+      point.sentences.forEach((sentence, i) => {
+      syntaxSentences.push(
+        <span className={styles.syntaxSentenceSpacer}>
+          <div className={styles.syntaxAdd}>+ {i}</div>
+        </span>)
+
+
+      syntaxSentences.push(
         <span>
-          <span>
-            +
-          </span>
           <Sentence
             settings={props.settings}
             data={sentence}
@@ -48,10 +53,14 @@ export default (props) => {
             updateItem={props.updateItem}
             removeItem={props.removeItem}
           />
-        </span>
-      )
+        </span>)
+      }
     )
-    syntaxSentences.push(<span>]</span>)
+    syntaxSentences.push(
+      <span className={styles.syntaxSentenceSpacer}>
+        <div className={styles.syntaxAdd}>+{point.sentences.length}</div>
+      </span>)
+    syntaxSentences.push(<span className={styles.pointBoundary}>]</span>)
     }
   )
 

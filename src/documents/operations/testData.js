@@ -38,15 +38,16 @@ export const document = {
   sentences: {
     'sent1': {id: 'sent1', parentPoint: 'point1', text: 'The quick red fox jumped over the brown dog.'},
     'sent2': {id: 'sent2', text: 'The dog did\'t react.'},
-    'sent3': {id: 'sent3', text: 'This sentences doesn\'t hava a point'}
+    'sent3': {id: 'sent3', text: 'This sentences doesn\'t hava a point'},
+    'sent4': {id: 'sent4', text: 'Silly sentence is the duck.'}
   },
   snippets: {
     'snip1': {id: 'snip1', text: 'More research on foxes'},
     'snip2': {id: 'snip2', text: 'What is the dogs name?'}
   },
   points: {
-    'point1': { id: "point1", text: "Quick Anectdote", sentences: ['sent1']},
-    'point2': { id: "point2", text: "Quick Anectdote", sentences: ['sent2']}
+    'point1': { id: "point1", text: "Quick Anectdote", sentences: ['sent1', 'sent3']},
+    'point2': { id: "point2", text: "Quick Anectdote", sentences: ['sent2', 'sent4']}
   },
   paragraphs: {
     'para1': {id: 'para1', title: 'Introduce ANT', points: ['point1', 'point2'], snippets: ['snip1', 'snip2'], sentences: ['sent1', 'sent2', 'sent3']}
