@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput} from 'text-exploder-two'
+import TextInput from './TextInput'
 
 import Points from './Points'
 import Snippets from './Snippets'
@@ -35,7 +35,7 @@ export default (props) => {
       point.sentences.forEach((sentence, i) => syntaxSentences.push(
         <span>
           <span>
-            
+            +
           </span>
           <Sentence
             settings={props.settings}

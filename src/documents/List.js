@@ -1,33 +1,33 @@
-import React from 'react';
-import {TextInput} from 'text-exploder-two'
-
-import styles from './list.module.css'
-export default (type) => ({children, ...props}) => {
-  const listChildren = React.Children.toArray(children)
-  const textAccessor = (type === 'sentences' || type === 'snippets'||  type === 'points') ? 'text' : 'title'
-
-  const addItem = (val) => props.addItem({
-    type,
-    item: {[textAccessor]: val},
-    parentID: props.parentID,
-    parentType: props.parentType
-  })
-
-  return (
-    <div className={styles.list}>
-      <div>
-        {children && listChildren.map(el =>
-          React.cloneElement(el, {parentID: props.parentID, parentType: type}))}
-      </div>
-      <div className={styles.newForm}>
-        {!props.hideNew && <TextInput
-          init={true}
-          text={`Add ${type}`}
-          addItemHandler={addItem}/>}
-      </div>
-    </div>
-  )
-}
+// import React from 'react';
+// // import {TextInput} from 'text-exploder-two'
+//
+// import styles from './list.module.css'
+// export default (type) => ({children, ...props}) => {
+//   const listChildren = React.Children.toArray(children)
+//   const textAccessor = (type === 'sentences' || type === 'snippets'||  type === 'points') ? 'text' : 'title'
+//
+//   const addItem = (val) => props.addItem({
+//     type,
+//     item: {[textAccessor]: val},
+//     parentID: props.parentID,
+//     parentType: props.parentType
+//   })
+//
+//   return (
+//     <div className={styles.list}>
+//       <div>
+//         {children && listChildren.map(el =>
+//           React.cloneElement(el, {parentID: props.parentID, parentType: type}))}
+//       </div>
+//       <div className={styles.newForm}>
+//         {!props.hideNew && <TextInput
+//           init={true}
+//           text={`Add ${type}`}
+//           addItemHandler={addItem}/>}
+//       </div>
+//     </div>
+//   )
+// }
 
 
 

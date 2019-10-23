@@ -1,6 +1,6 @@
-import TE from 'text-exploder-two'
+// import TE from 'text-exploder-two'
 
 export default {
-  dummyDocumentList: () => TE.dummyDocumentList,
-  dummyDocumentStore: (id) => TE.dummyDocumentStore[id]
+  // dummyDocumentList: () => TE.dummyDocumentList,
+  // dummyDocumentStore: (id) => TE.dummyDocumentStore[id]
 }

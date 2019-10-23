@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput} from 'text-exploder-two'
+import TextInput from './TextInput'
 
 import styles from './list.module.css'
 
