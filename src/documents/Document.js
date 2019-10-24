@@ -75,13 +75,14 @@ function Articles (props) {
     props.dispatch({type: "DOCUMENTS_ITEM_UPDATE", payload: {loc, item}})
   }
 
-  const addItem = ({type, item, parentID=null, parentType=null}) => {
+  const addItem = ({type, item, locIndex, parentID=null, parentType=null}) => {
     const loc = {
       collection: type,
     }
 
     if (parentID) {
       loc.belongs_to = {
+        index: locIndex,
         collection: parentType,
         id: parentID
       }

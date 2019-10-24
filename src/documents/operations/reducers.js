@@ -45,7 +45,11 @@ const main = (state = document, action) => {
       }
 
       if (payload.loc.belongs_to) {
-        newState[payload.loc.belongs_to.collection][payload.loc.belongs_to.id][payload.loc.collection].push(payload.loc.id)
+        newState[payload.loc.belongs_to.collection][payload.loc.belongs_to.id][payload.loc.collection].splice(
+          payload.loc.belongs_to.index,
+          0,
+          payload.item.id
+        )
       }
 
       newState[payload.loc.collection][payload.loc.id] = {...initModels[payload.loc.collection], ...payload.item}
