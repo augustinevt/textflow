@@ -5,6 +5,7 @@ import Points from './Points'
 import Snippets from './Snippets'
 import Sentence from './Sentence'
 import SentenceInput from './SentenceInput'
+import SyntaxSpacer from './SyntaxSpacer'
 
 import styles from './list.module.css'
 export default (props) => {
@@ -34,10 +35,7 @@ export default (props) => {
       syntaxSentences.push(<span className={styles.pointBoundary}>[</span>)
 
       point.sentences.forEach((sentence, i) => {
-      syntaxSentences.push(
-        <span className={styles.syntaxSentenceSpacer}>
-          <div className={styles.syntaxAdd}>+ {i}</div>
-        </span>)
+      syntaxSentences.push(<SyntaxSpacer index={i} pointID={point.id} addItem={props.addItem}/>)
 
 
       syntaxSentences.push(
@@ -56,10 +54,9 @@ export default (props) => {
         </span>)
       }
     )
-    syntaxSentences.push(
-      <span className={styles.syntaxSentenceSpacer}>
-        <div className={styles.syntaxAdd}>+{point.sentences.length}</div>
-      </span>)
+
+    syntaxSentences.push(<SyntaxSpacer index={point.sentences.length} pointID={point.id} addItem={props.addItem}/>)
+
     syntaxSentences.push(<span className={styles.pointBoundary}>]</span>)
     }
   )
