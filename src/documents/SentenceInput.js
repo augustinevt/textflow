@@ -36,7 +36,7 @@ const Inter = styled.span`
   }
 `
 
-export default function({id, text, edit, active, init, addItem, removeItem, mode}) {
+export default function({id, text, blur, edit, active, init, addItem, removeItem, mode}) {
 
   console.log(mode)
 
@@ -90,12 +90,17 @@ export default function({id, text, edit, active, init, addItem, removeItem, mode
 
   const onBlur = (e) => {
     addItemHandler()
+
+    if (blur && init) { // <- need to change from props
+      console.log('blur', e.target)
+      blur()
+    }
+
     if (init) {
       inputRef.current.innerHTML = text
       setNewText(text)
     }
   }
-
 
   return (
     <Wrapper mode={mode}>
@@ -106,7 +111,7 @@ export default function({id, text, edit, active, init, addItem, removeItem, mode
             init={init}
             onClick={onClick}
             contentEditable={true}
-            dangerouslySetInnerHTML={{__html: text}}
+            dangerouslySetInnerHTML={{__html: (text || ' ')}}
             onKeyDown={onKeyPress}
             onBlur={onBlur}
             onInput={onChange}

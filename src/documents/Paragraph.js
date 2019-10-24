@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import TextInput from './TextInput'
 
 import Points from './Points'
@@ -9,6 +9,10 @@ import SyntaxSpacer from './SyntaxSpacer'
 
 import styles from './list.module.css'
 export default (props) => {
+  const [activeSyntaxInput, setActiveSyntaxInput] = useState({
+    point: null,
+    index: null
+  })
 
   const removeItem = () => {
     props.removeItem({  type: 'paragraphs', id: props.data.id})
@@ -35,7 +39,16 @@ export default (props) => {
       syntaxSentences.push(<span className={styles.pointBoundary}>[</span>)
 
       point.sentences.forEach((sentence, i) => {
-      syntaxSentences.push(<SyntaxSpacer index={i} pointID={point.id} addItem={props.addItem}/>)
+      syntaxSentences.push(<SyntaxSpacer
+        active={(
+          activeSyntaxInput.point === point.id &&
+          (activeSyntaxInput.index + 1 === i)
+        )}
+        activate={setActiveSyntaxInput}
+        index={i}
+        pointID={point.id}
+        addItem={props.addItem}
+      />)
 
 
       syntaxSentences.push(
@@ -55,7 +68,15 @@ export default (props) => {
       }
     )
 
-    syntaxSentences.push(<SyntaxSpacer index={point.sentences.length} pointID={point.id} addItem={props.addItem}/>)
+    syntaxSentences.push(<SyntaxSpacer
+      active={(
+        activeSyntaxInput.point === point.id &&
+        (activeSyntaxInput.index + 1 === point.sentences.length)
+      )}
+      activate={setActiveSyntaxInput}
+      index={point.sentences.length}
+      pointID={point.id}
+      addItem={props.addItem}/>)
 
     syntaxSentences.push(<span className={styles.pointBoundary}>]</span>)
     }
@@ -97,6 +118,8 @@ export default (props) => {
 
         { props.settings.syntaxMode && <span>
             { getSyntaxSentences() }
+            { activeSyntaxInput.point }
+            { activeSyntaxInput.index }
             <Sentence
             settings={props.settings}
             path={{...props.path, paragraphs: props.data.id}}
