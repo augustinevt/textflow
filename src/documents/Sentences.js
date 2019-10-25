@@ -1,16 +1,17 @@
 import React from 'react';
+
+import { collectionNames } from '../constants'
+
 import TextInput from './TextInput'
-
-import styles from './list.module.css'
-
 import Sentence from './Sentence'
 
+import styles from './list.module.css'
 
 export default (props) => {
 
   const addItem = (val) => {
     props.addItem({
-      type: 'sentences',
+      type: collectionNames.SENTENCES,
       item: {text: val},
       parentID: props.parentID,
       parentType: props.parentType
@@ -21,10 +22,11 @@ export default (props) => {
       <div className={styles.list}>
       {
         props.data.map(sentence => <Sentence
+          key={sentence.id}
           settings={props.settings}
           data={sentence}
           parentID={props.data.id}
-          parentType={'points'}
+          parentType={collectionNames.POINTS}
           addItem={props.addItem}
           updateItem={props.updateItem}
           removeItem={props.removeItem}

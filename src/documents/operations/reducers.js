@@ -1,6 +1,6 @@
 import deepClone from 'clone-deep'
 
-import {document} from './testData'
+import { document } from './testData'
 
 const initModels = {
   'sections': {title: 'default', paragraphs: []},
@@ -20,7 +20,6 @@ const main = (state = document, action) => {
       return document;
 
     case "DOCUMENT_ITEM_UPDATE":
-
       if (payload.loc.collection === 'document') {
         return { ...state, ...payload.item }
       } else {
@@ -52,10 +51,12 @@ const main = (state = document, action) => {
         )
       }
 
-      newState[payload.loc.collection][payload.loc.id] = {...initModels[payload.loc.collection], ...payload.item}
+      newState[payload.loc.collection][payload.loc.id] = {
+        ...initModels[payload.loc.collection],
+        ...payload.item
+      }
 
       return newState
-
 
     case "DOCUMENT_ITEM_REMOVE":
 
@@ -71,7 +72,6 @@ const main = (state = document, action) => {
         return newState
       }
 
-
       delete newState[payload.loc.collection][payload.loc.id]
 
       // this needs to be simplified
@@ -80,9 +80,9 @@ const main = (state = document, action) => {
       Object.keys(newState).forEach(collection => {
         Object.keys(newState[collection]).forEach(itemID =>{
           if (state[collection][itemID][payload.loc.collection]) {
-            newState[collection][itemID][payload.loc.collection] = newState
-              [collection][itemID][payload.loc.collection]
-              .filter(childID => childID !== payload.loc.id)
+            newState[collection][itemID][payload.loc.collection] =
+              newState[collection][itemID][payload.loc.collection]
+                .filter(childID => childID !== payload.loc.id)
           }
         })
       })

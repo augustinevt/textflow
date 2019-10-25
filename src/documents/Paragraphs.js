@@ -1,13 +1,16 @@
 import React from 'react';
-import TextInput from './TextInput'
 
+import { collectionNames } from '../constants'
+
+import TextInput from './TextInput'
 import Paragraph from './Paragraph'
 
 import styles from './list.module.css'
+
 export default (props) => {
 
   const addItem = (val) => props.addItem({
-    type: 'paragraphs',
+    type: collectionNames.PARAGRAPHS,
     item: {title: val},
     parentID: props.parentID,
     parentType: props.parentType
@@ -17,11 +20,12 @@ export default (props) => {
     <div className={styles.list}>
       {
         props.data.map(paragraph => <Paragraph
+          key={paragraph.id}
           settings={props.settings}
           data={paragraph}
           path={props.path}
           parentID={props.parentID}
-          parentType={'sections'}
+          parentType={collectionNames.SECTIONS}
           addItem={props.addItem}
           isolateItem={props.isolateItem}
           updateItem={props.updateItem}
@@ -35,8 +39,6 @@ export default (props) => {
           text={'Add Paragraph'}
           addItemHandler={addItem}/>}
       </div>
-
     </div>
-
   )
 }

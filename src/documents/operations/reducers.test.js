@@ -26,9 +26,7 @@ let document = {
   }
 }
 
-
 test('updates an document title', () => {
-
   const action = {
     type: 'DOCUMENT_ITEM_UPDATE',
     payload: {
@@ -45,7 +43,6 @@ test('updates an document title', () => {
   const newState = reducer(initialState, action)
 
   expect(newState).toEqual(desiredState)
-
 });
 
 /// POINTS
@@ -74,8 +71,6 @@ test('updates a Point', () => {
 });
 
 test('remove a Point', () => {
-
-
     const action = {
       type: 'DOCUMENT_ITEM_REMOVE',
       payload: {
@@ -97,7 +92,7 @@ test('remove a Point', () => {
     expect(newState).toEqual(desiredState)
 });
 
-test.only('add a Point', () => {
+test('add a Point', () => {
 
     const id = uuid()
     const action = {
@@ -127,11 +122,6 @@ test.only('add a Point', () => {
 
     expect(newState).toEqual(desiredState)
 });
-
-
-
-
-////
 
 test('updates a sentence', () => {
   const action = {

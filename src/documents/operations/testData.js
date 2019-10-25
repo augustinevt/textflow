@@ -1,37 +1,3 @@
-// export const document = {
-//   id: "doc1",
-//   title: "Actor Network Theory",
-//   sentences: [
-//     {id: 'sent1', text: 'The quick red fox jumped over the brown dog.'},
-//     {id: 'sent2', text: 'The dog did\'t react.'}
-//   ],
-//   snippets: [
-//     {id: 'snip1', text: 'More raesearch on foxes'},
-//     {id: 'snip2', text: 'What is the dogs name?'}
-//   ],
-//   points: [
-//     {
-//       id: "point1",
-//       text: "Quick Anectdote",
-//       sentences: ['sent1']
-//     },
-//     {
-//       id: "point2",
-//       text: "Quick Anectdote",
-//       sentences: ['sent2']
-//     }
-//   ],
-//   paragraphs: [
-//     {id: 'para1', points: ['point1', 'point2'] }
-//   ],
-//   sections: [
-//     {
-//       id: "sect1",
-//       paragraphs: ['para1']
-//     }
-//   ]
-// }
-
 export const document = {
   id: "doc1",
   title: "Actor Network Theory",

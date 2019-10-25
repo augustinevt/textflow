@@ -1,16 +1,21 @@
 import React, {useState} from 'react';
+
+import { collectionNames } from '../constants'
+
 import styles from './list.module.css'
 import SentenceInput from './SentenceInput'
 
 export default ({pointID, addItem, index, activate, active}) => {
 
+  const [clicked, setClicked ] = useState(false)
+
   const addSentence = (val) => {
     addItem({
       locIndex: index,
-      type: 'sentences',
+      type: collectionNames.SENTENCES,
       item: {text: val},
       parentID: pointID,
-      parentType: 'points'
+      parentType: collectionNames.POINTS
     })
     setClicked(false)
     activate({point: pointID, index})
@@ -25,13 +30,14 @@ export default ({pointID, addItem, index, activate, active}) => {
     // activate({point: null, index: null})
   }
 
-
-  const [clicked, setClicked ] = useState(false)
-
   return <span className={styles.syntaxSentenceSpacer}>
     {clicked || active ?
-      <SentenceInput blur={blur} addItem={addSentence} mode={1} init={true} active={active || clicked}/>
-      :
+      <SentenceInput
+        blur={blur}
+        addItem={addSentence}
+        mode={1} init={true}
+        active={active || clicked}/>
+    :
       <div onClick={onClick} className={styles.syntaxAdd}>+ {index}</div>
     }
   </span>

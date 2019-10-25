@@ -1,5 +1,4 @@
 .wrapper {
-  /* display: flex; */
   width: 100%;
 }
 
@@ -31,16 +30,14 @@
 }
 
 .paragraph {
-    border: solid;
+  border: solid;
   display: flex;
   width: 100%;
-  /* flex-wrap: wrap; */
   padding-bottom: 4%;
-  /* padding-left: 2%; */
 }
 
 .points {
-    border: solid;
+  border: solid;
   display: flex;
   width: 100%;
   flex-wrap: wrap;

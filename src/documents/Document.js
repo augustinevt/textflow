@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import styles from './document.module.css'
+import { collectionNames, documentActions } from '../constants'
 
 import TextInput from './TextInput'
-import list from './List'
 import Section from './Section'
 
-const mapStateToProps = (state) => {
+import styles from './document.module.css'
 
+const mapStateToProps = (state) => {
   const zippedDoc = {}
+  // this should be replaced with a selector...
   const procDoc = JSON.parse(JSON.stringify(state.document))
 
   zippedDoc.sections = procDoc.sections.order.map(sectID => procDoc.sections[sectID])
@@ -36,20 +37,14 @@ const flowSettings = {
   0: {showParagraphs: true},
   1: {showParagraphs: true, showPoints: true},
   2: {showParagraphs: true, showPoints: true, showSnippets: true},
-  3: {showParagraphs: true, showPoints: true, showSnippets: true, showSentences: true},
+  3: {
+    showParagraphs: true,
+    showPoints: true,
+    showSnippets: true,
+    showSentences: true
+  },
   4: {syntaxMode: true}
 }
-
-// const Sections = list('sections')
-// const Section = item('sections')
-// const Paragraphs = list('paragraphs')
-// const Paragraph = item('paragraphs')
-// const Points = list('points')
-// const Point = item('points')
-// const Sentences = list('sentences')
-// const Sentence = item('sentences')
-// const Snippets = list('snippets')
-// const Snippet = item('snippets')
 
 function Articles (props) {
   const [flowState, setFlowState] = useState(4)
@@ -57,28 +52,23 @@ function Articles (props) {
   const [selectedParagraph, setSelectedParagraph] = useState(null)
 
   const removeItem = ({type, id}) => {
-    const loc = {
-      collection: type,
-      id
-    }
-
-    props.dispatch({ type: "DOCUMENTS_ITEM_REMOVE", payload: { loc }})
+    const loc = { collection: type, id}
+    props.dispatch({
+      type: documentActions.DOCUMENTS_ITEM_REMOVE,
+      payload: { loc }
+    })
   }
 
   const updateItem = ({type, item, id}) => {
-    console.log('document => ITEM update', type, item, id)
-    const loc = {
-      collection: type,
-      id,
-    }
-
-    props.dispatch({type: "DOCUMENTS_ITEM_UPDATE", payload: {loc, item}})
+    const loc = {collection: type,id}
+    props.dispatch({
+      type: documentActions.DOCUMENTS_ITEM_UPDATE,
+      payload: {loc, item}
+    })
   }
 
   const addItem = ({type, item, locIndex, parentID=null, parentType=null}) => {
-    const loc = {
-      collection: type,
-    }
+    const loc = {collection: type}
 
     if (parentID) {
       loc.belongs_to = {
@@ -88,18 +78,14 @@ function Articles (props) {
       }
     }
 
-    props.dispatch({type: "DOCUMENTS_ITEM_ADD", payload: {loc, item}})
+    props.dispatch({
+      type: documentActions.DOCUMENTS_ITEM_ADD,
+      payload: {loc, item}
+    })
   }
 
-  const {document: {sections, paragraphs}} = props
-
   const isolateItem = (sectionID, paragraphID=null) => {
-    const section = props.zippedDoc.sections.find(section => {
-
-       return section.id === sectionID
-
-    })
-
+    const section = props.zippedDoc.sections.find(section => section.id === sectionID)
     setSelectedSection(section)
 
     if (paragraphID) {
@@ -112,36 +98,31 @@ function Articles (props) {
   }
 
   const getJSX = (settings) => {
-    return (<div className={styles.wrapper} >
-
-      {
-
-          (selectedSection ? [selectedSection] : props.zippedDoc.sections).map(section =>
-            <Section
-              settings={settings}
-              data={section}
-              addItem={addItem}
-              updateItem={updateItem}
-              removeItem={removeItem}
-              isolateItem={isolateItem}
-              selectedParagraph={selectedParagraph}
-            />
-        )
+    return (<div className={styles.wrapper}>
+      {(selectedSection ?
+        [selectedSection] :
+        props.zippedDoc.sections).map(section =>
+          <Section
+            key={section.id}
+            settings={settings}
+            data={section}
+            addItem={addItem}
+            updateItem={updateItem}
+            removeItem={removeItem}
+            isolateItem={isolateItem}
+            selectedParagraph={selectedParagraph}
+          />)
       }
 
-      {
-        !selectedParagraph && <div className={styles.newForm}>
-          <TextInput
-            init={true}
-            text={'Add section'}
-            addItemHandler={(val) => addItem({
-              type: 'sections',
-              item: {title: val}
-            })}/>
-        </div>
-      }
-
-
+      {!selectedParagraph && <div className={styles.newForm}>
+        <TextInput
+          init={true}
+          text={'Add section'}
+          addItemHandler={(val) => addItem({
+            type: collectionNames.SECTIONS,
+            item: {title: val}
+          })}/>
+        </div>}
     </div>)
   }
 
@@ -169,14 +150,14 @@ function Articles (props) {
 
   return (
     <div>
-      <button onClick={() => setFlowState(0)}>Skel</button>
-      <button onClick={() => setFlowState(1)}>points 1</button>
-      <button onClick={() => setFlowState(2)}>snippets 2</button>
-      <button onClick={() => setFlowState(3)}>sentences</button>
-      <button onClick={() => setFlowState(4)}>syntax</button>
-      <button onClick={() => exportText()}>EXPORT</button>
+      <button key="skel-btn" onClick={() => setFlowState(0)}>Skel</button>
+      <button key="poi-btn" onClick={()=> setFlowState(1)}>points 1</button>
+      <button key="snip-btn" onClick={()=> setFlowState(2)}>snippets 2</button>
+      <button key="sent-btn" onClick={()=> setFlowState(3)}>sentences</button>
+      <button key="syn-btn" onClick={()=> setFlowState(4)}>syntax</button>
+      <button key="exp-btn" onClick={()=> exportText()}>EXPORT</button>
 
-      { selectedSection &&
+      {selectedSection &&
         <div onClick={() => {
           setSelectedSection(false)
           setSelectedParagraph(false)
@@ -185,19 +166,18 @@ function Articles (props) {
         </div>
       }
 
-      { selectedParagraph &&
+      {selectedParagraph &&
         <div onClick={() => {
           setSelectedParagraph(false)
         }}>
-          { selectedParagraph.title} >>
+          {selectedParagraph.title}
         </div>
       }
 
-      { getJSX(flowSettings[flowState]) }
+      {getJSX(flowSettings[flowState])}
 
     </div>
-  );
-
+  )
 }
 
 export default connect(mapStateToProps)(Articles);

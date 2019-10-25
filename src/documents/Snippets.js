@@ -1,50 +1,34 @@
 import React from 'react';
+
+import { collectionNames } from '../constants'
+
 import TextInput from './TextInput'
-
-import styles from './list.module.css'
-
 import Snippet from './Snippet'
 
+import styles from './list.module.css'
 
 export default (props) => {
 
   const addItem = (val) => props.addItem({
-    type: 'snippets',
+    type: collectionNames.SNIPPETS,
     item: {text: val},
     parentID: props.parentID,
     parentType: props.parentType
   })
 
-  const removeItem = () => {
-    props.removeItem({  type: 'snippets', id: props.id})
-  }
-
-  const isolateItem = () => {
-    props.isolateItem({  type: 'snippets', id: props.id, parentID: props.parentID})
-  }
-
-  const updateItem = (val) => {
-    props.updateItem({
-      type: '',
-      item: {title: val},
-      id: props.id
-    })
-  }
-
-
   return (
       <div className={styles.list}>
       {
         props.data.map(snippet => <Snippet
+          key={snippet.id}
           data={snippet}
           parentID={props.data.parentID}
-          parentType={'snippets'}
+          parentType={collectionNames.SNIPPETS}
           addItem={props.addItem}
           updateItem={props.updateItem}
           removeItem={props.removeItem}
         />)
       }
-
 
       <div className={styles.newForm}>
         {!props.hideNew && <TextInput

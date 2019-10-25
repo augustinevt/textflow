@@ -2,7 +2,6 @@ import React, {useState, useRef} from 'react'
 import styled from 'styled-components'
 
 const Inter = styled.span`
-  /* color: ${({init}) => init ? 'black' : 'grey'}; */
   color: grey;
   min-width: 34px;
   min-height: 34px;
@@ -20,7 +19,6 @@ const Inter = styled.span`
 `
 
 export default function({text, active, id, addItemHandler, edit, init }) {
-
   const [newText, setNewText] = useState(text)
   const inputRef = useRef(null)
 
@@ -35,7 +33,7 @@ export default function({text, active, id, addItemHandler, edit, init }) {
   }
 
   const onKeyPress = (e) => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       e.preventDefault()
       changeHandler()
       if (init) {
@@ -71,6 +69,5 @@ export default function({text, active, id, addItemHandler, edit, init }) {
         onKeyDown={onKeyPress}
         onInput={onChange}
       />
-
   )
 }
