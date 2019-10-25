@@ -84,7 +84,7 @@ export default (props) => {
       index={point.sentences.length}
       pointID={point.id}
       addItem={props.addItem}/>)
-      
+
     syntaxSentences.push(
       <span key={`${point.id}-end`} className={styles.pointBoundary}>]</span>
     )
@@ -113,7 +113,6 @@ export default (props) => {
           <Points
             settings={props.settings}
             data={props.data.points}
-            path={{...props.path, paragraphs: props.data.id}}
             parentID={props.data.id}
             parentType={collectionNames.PARAGRAPHS}
             addItem={props.addItem}

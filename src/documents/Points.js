@@ -23,7 +23,6 @@ export default (props) => {
           key={point.id}
           settings={props.settings}
           data={point}
-          path={props.path}
           parentID={props.data.parentID}
           parentType={collectionNames.PARAGRAPHS}
           addItem={props.addItem}

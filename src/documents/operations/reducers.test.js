@@ -108,15 +108,15 @@ test('add a Point', () => {
         },
         item: {
           id,
-          text: 'meow'
+          text: 'meow',
         }
       }
     }
 
     const initialState = JSON.parse(JSON.stringify(document))
     const desiredState = JSON.parse(JSON.stringify(document))
-    desiredState.paragraphs['para1'].points.push(id)
-    desiredState.points[id] = { id, text: 'meow' }
+    desiredState.paragraphs['para1'].points.unshift(id)
+    desiredState.points[id] = { id, text: 'meow', sentences: [] }
 
     const newState = reducer(initialState, action)
 
@@ -207,11 +207,13 @@ test('adds a paragraph', () => {
 
   const initialState = JSON.parse(JSON.stringify(document))
   const desiredState = JSON.parse(JSON.stringify(document))
-  desiredState.sections['sect1'].paragraphs.push('para2')
+  desiredState.sections['sect1'].paragraphs.unshift('para2')
   desiredState.paragraphs.para2 = {
     id: 'para2',
     title: 'Paragraph Two',
-    points: []
+    points: [],
+    sentences: [],
+    snippets: []
   }
 
   const newState = reducer(initialState, action)
@@ -406,5 +408,3 @@ test('removes sentence', () => {
 
   expect(newState).toEqual(desiredState)
 });
-
-

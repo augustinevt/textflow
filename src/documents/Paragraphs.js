@@ -23,7 +23,6 @@ export default (props) => {
           key={paragraph.id}
           settings={props.settings}
           data={paragraph}
-          path={props.path}
           parentID={props.parentID}
           parentType={collectionNames.SECTIONS}
           addItem={props.addItem}

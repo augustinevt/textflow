@@ -9,8 +9,6 @@ import styles from './list.module.css'
 
 export default (props) => {
 
-  const path = {section: props.data.id}
-
   const removeItem = () => {
     props.removeItem({type: collectionNames.SECTIONS, id: props.data.id})
   }
@@ -47,7 +45,6 @@ export default (props) => {
       <Paragraphs
         settings={props.settings}
         data={data}
-        path={path}
         parentID={props.data.id}
         isolateItem={props.isolateItem}
         parentType={collectionNames.SECTIONS}

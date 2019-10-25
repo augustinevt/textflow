@@ -47,7 +47,7 @@ const flowSettings = {
 }
 
 function Articles (props) {
-  const [flowState, setFlowState] = useState(4)
+  const [flowState, setFlowState] = useState(0)
   const [selectedSection, setSelectedSection] = useState(null)
   const [selectedParagraph, setSelectedParagraph] = useState(null)
 
